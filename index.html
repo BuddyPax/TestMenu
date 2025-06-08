@@ -1245,3 +1245,14 @@
     </script>
 </body>
 </html>
+fetch('menu.json')
+  .then(res => res.json())
+  .then(data => {
+    if (data.menuItems) app.menuItems = data.menuItems;
+    if (data.menuTitle) app.menuTitle = data.menuTitle;
+    if (data.categoryOrder) app.categoryOrder = data.categoryOrder;
+    document.getElementById('menuTitle').value = app.menuTitle;
+    app.renderMenuItems();
+    app.renderMenuPreview();
+  })
+  .catch(err => console.warn("menu.json load failed:", err));
