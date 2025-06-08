@@ -218,19 +218,13 @@
         <!-- Ship Menu Section -->
         <div class="hidden" id="shipSection">
             <div class="flex justify-between items-center mb-6">
-                <span class="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 px-2 py-1 rounded text-sm">Ship Manager</span>
+                <span class="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 px-2 py-1 rounded text-sm">Ship</span>
                 <button class="text-sm text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary" onclick="logout()">
                     Logout
                 </button>
             </div>
             <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-                <h2 class="text-xl font-bold mb-4">Shipping Menu</h2>
-                <div class="mb-4">
-                    <label class="block text-sm font-medium mb-2">Ship Menu Title:</label>
-                    <input class="w-full px-3 py-2 text-base border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-primary dark:bg-gray-700" id="shipMenuTitle" type="text" value="Shipping Options"/>
-                </div>
-                <button class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 mb-4" onclick="addShipItem()">+ Add Ship Item</button>
-                <ul class="grid gap-2" id="shipItemList"></ul>
+                <div id="shipMenuDisplay"></div>
             </div>
         </div>
 
@@ -273,14 +267,15 @@
             shipPassword: 'ship123'
         };
 
-        let jsonLoaded = false;
-        let loadingDone = false;
+        let appReady = false;
 
         // Loading sequence
         const delay = Math.floor(3000 + Math.random() * 2000);
         setTimeout(() => {
-            loadingDone = true;
-            if (jsonLoaded) showLogin();
+            if (!appReady) {
+                appReady = true;
+                showLogin();
+            }
         }, delay);
 
         // Try to load menu.json
@@ -288,19 +283,18 @@
             .then(res => res.json())
             .then(data => {
                 app = { ...app, ...data };
-                jsonLoaded = true;
-                if (loadingDone) showLogin();
+                if (!appReady) {
+                    appReady = true;
+                    showLogin();
+                }
             })
             .catch(err => {
                 console.warn('Could not load menu.json, using defaults');
-                jsonLoaded = true;
-                if (loadingDone) showLogin();
+                if (!appReady) {
+                    appReady = true;
+                    showLogin();
+                }
             });
-
-        // Failsafe timeout
-        setTimeout(() => {
-            showLogin();
-        }, 15000);
 
         function showLogin() {
             document.getElementById('loadingScreen').style.display = 'none';
@@ -308,7 +302,7 @@
         }
 
         function submitLogin() {
-            if (!jsonLoaded) {
+            if (!appReady) {
                 alert("Please wait for the app to finish loading...");
                 return;
             }
@@ -696,26 +690,33 @@
         }
 
         function renderShipItems() {
-            const container = document.getElementById("shipItemList");
-            container.innerHTML = "";
+            const container = document.getElementById("shipMenuDisplay");
             
-            app.shipItems.forEach((item, index) => {
-                const li = document.createElement("li");
-                li.className = "border p-3 rounded shadow bg-white dark:bg-gray-800 flex justify-between items-start";
-                li.innerHTML = `
-                    <div>
-                        <strong>${item.name}</strong><br>
-                        <span class="text-gray-600 dark:text-gray-400">${item.price}</span><br>
-                        <em class="text-sm text-gray-500 dark:text-gray-400">${item.description}</em>
-                    </div>
-                    <button class="text-red-600 hover:text-red-800 ml-2" onclick="deleteShipItem(${index})">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                        </svg>
-                    </button>
-                `;
-                container.appendChild(li);
-            });
+            let html = `<div class="max-w-4xl mx-auto">
+                <h1 class="text-3xl font-bold text-center mb-8">Shipping Options</h1>`;
+
+            if (app.shipItems.length === 0) {
+                html += `<p class="text-center text-gray-500 dark:text-gray-400 italic">No shipping options available.</p>`;
+            } else {
+                html += `<div class="grid grid-cols-1 gap-6">`;
+                
+                app.shipItems.forEach(item => {
+                    const priceDisplay = item.price ? `<div class="ml-4 text-xl font-medium text-primary">${item.price}</div>` : '';
+                    
+                    html += `<div class="flex justify-between">
+                        <div class="flex-1">
+                            <h3 class="text-lg font-medium">${item.name}</h3>
+                            ${item.description ? `<div class="mt-1 text-gray-600 dark:text-gray-400">${item.description}</div>` : ''}
+                        </div>
+                        ${priceDisplay}
+                    </div>`;
+                });
+                
+                html += `</div>`;
+            }
+
+            html += `</div>`;
+            container.innerHTML = html;
         }
 
         function deleteShipItem(index) {
