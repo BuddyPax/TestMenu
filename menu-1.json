@@ -1,0 +1,54 @@
+{
+  "menuTitle": "Buddy Pax",
+  "categoryOrder": [
+    "Flower",
+    "Wax",
+    "In House Items"
+  ],
+  "menuItems": [
+    {
+      "name": "Exotic Smalls",
+      "price": "20/40/80/150",
+      "vipPrice": "20/40/60/120",
+      "description": "Gelato",
+      "category": "Flower",
+      "image": null
+    },
+    {
+      "name": "Indoor Mediums",
+      "price": "80/150",
+      "vipPrice": "60/120",
+      "description": "Sold H/H\n\nGalatic Glue\nMilk N Cookies",
+      "category": "Flower",
+      "image": null
+    },
+    {
+      "name": "Greenhouse Gas",
+      "price": "30/55/100",
+      "vipPrice": "40/75",
+      "description": "Sold H/H\n\nPilsbury Doughboy \nLimonchello",
+      "category": "Flower",
+      "image": null
+    },
+    {
+      "name": "Prerolls With Lovs",
+      "price": "50",
+      "vipPrice": "40",
+      "description": "5 prerolls\n1.5G Ea\n.2 Wax Infused\nHand rolled",
+      "category": "In House Items",
+      "image": null
+    },
+    {
+      "name": "Dabbers Labratory Splitz",
+      "price": "50/100/200",
+      "vipPrice": "50/100/150",
+      "description": "Q wax splitz\nCheetah Piss\nZootopia",
+      "category": "Wax",
+      "image": null
+    }
+  ],
+  "adminPassword": "menu123",
+  "vipPassword": "vip789",
+  "viewPassword": "VIP",
+  "socials": {}
+}
